@@ -1,0 +1,7 @@
+name: ChatDictionary
+version: '${project.version}'
+main: com.github.zauworks.chatdictionary.ChatDictionary
+api-version: 1.15
+prefix: ChatDictionary
+authors: [ zauuuw ]
+description: チャットに辞書機能を追加します

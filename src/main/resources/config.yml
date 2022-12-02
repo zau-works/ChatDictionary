@@ -1,0 +1,13 @@
+dictionary:
+  yay:
+    color: none
+    underline: true
+    bold: true
+    mean: '&e日本語で「わーい」や「やったー」を意味する。'
+  鯖:
+    color: none
+    underline: true
+    bold: true
+    mean:
+      - '&e「サーバー」の略称。'
+      - '&e「〇〇サーバー」のことを「〇〇鯖」と略すことがある。'
