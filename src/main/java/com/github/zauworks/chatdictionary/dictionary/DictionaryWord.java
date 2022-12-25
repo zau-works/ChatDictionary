@@ -34,4 +34,19 @@ public class DictionaryWord {
         return mean;
     }
 
+    public void setBold(boolean bold) {
+        this.bold = bold;
+    }
+
+    public void setUnderline(boolean underline) {
+        this.underline = underline;
+    }
+
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
+    }
+
+    public void setMean(String mean) {
+        this.mean = mean;
+    }
 }
