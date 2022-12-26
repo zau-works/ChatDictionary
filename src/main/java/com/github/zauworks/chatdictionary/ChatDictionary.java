@@ -4,6 +4,7 @@
 
 package com.github.zauworks.chatdictionary;
 
+import com.github.zauworks.chatdictionary.command.DictionarySettingCommand;
 import com.github.zauworks.chatdictionary.dictionary.DictionaryWord;
 import com.github.zauworks.chatdictionary.listener.PlayerChat;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,6 +38,7 @@ public final class ChatDictionary extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("ChatDictionary version " + getDescription().getVersion() + " has been un-loaded!");
+        getCommand("dictionary").setExecutor(new DictionarySettingCommand());
     }
 
     public static ChatDictionary getInstance() {
