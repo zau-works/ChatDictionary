@@ -2,6 +2,7 @@ package com.github.zauworks.chatdictionary.command;
 
 import com.github.zauworks.chatdictionary.ChatDictionary;
 import com.github.zauworks.chatdictionary.dictionary.DictionaryWord;
+import com.github.zauworks.chatdictionary.util.DataSave;
 import com.github.zauworks.chatdictionary.util.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,11 +36,20 @@ public class DictionarySettingCommand implements CommandExecutor {
 
         String type = args[0];
         if (type.equalsIgnoreCase("add")) {
-            if (args.length < 3) return false;
+            if (args.length < 3) {
+                sender.sendMessage(new Messages().error("[Error]:Usage: /dictionary add [word] [mean]"));
+                return false;
+            }
         } else if (type.equalsIgnoreCase("options")) {
-            if (args.length < 4) return false;
-        } else if (type.equalsIgnoreCase("reload")) {
-            if (args.length < 3) return false;
+            if (args.length < 4) {
+                sender.sendMessage(new Messages().error("[Error]:Usage: /dictionary options [word] <bold|underline|color|mean> [value]"));
+                return false;
+            }
+        } else if (type.equalsIgnoreCase("config")) {
+            if (args.length < 3) {
+                sender.sendMessage(new Messages().error("[Error]:Usage: /dictionary config reload [word]"));
+                return false;
+            }
         }
 
         if (type.equalsIgnoreCase("add") && args.length >= 3) {
@@ -81,14 +91,14 @@ public class DictionarySettingCommand implements CommandExecutor {
             DictionaryWord dict = ChatDictionary.getDictionaryWords().get(word);
             if (option.equalsIgnoreCase("bold")) {
                 //set bold
-                if (!isBoolean(args[3], sender)) return false;
+                if (!isBool(args[3], sender)) return false;
                 boolean bool = Boolean.valueOf(args[3]);
                 dict.setBold(bool);
                 sendSuccessMessage(String.valueOf(bool), word, "bold", sender);
                 return true;
             } else if (option.equalsIgnoreCase("underline")) {
                 //set underline
-                if (!isBoolean(args[3], sender)) return false;
+                if (!isBool(args[3], sender)) return false;
                 boolean bool = Boolean.valueOf(args[3]);
                 dict.setUnderline(bool);
                 sendSuccessMessage(String.valueOf(bool), word, "underline", sender);
@@ -129,14 +139,28 @@ public class DictionarySettingCommand implements CommandExecutor {
                 sender.sendMessage(new Messages().success("[Success]:Complete to reload a config."));
                 return true;
             }
-        } else {
+        } else if(type.equalsIgnoreCase("config")
+        && args[1].equalsIgnoreCase("save")){
+            //command type : config save
+            if(args.length != 3){
+                sender.sendMessage(new Messages().error("[Error]:Usage: /dictionary config save <all | word>."));
+                return false;
+            }
+            if(args[2].equalsIgnoreCase("all")){
+                new DataSave().main("all",sender);
+                return true;
+            }else if(ChatDictionary.getDictionaryWords().containsKey(args[2])){
+                new DataSave().main(args[2],sender);
+                return true;
+            }
+        }else {
             sender.sendMessage(new Messages().error("Command Usage: /dictionary <add|remove|options|config reload> ..."));
         }
 
         return false;
     }
 
-    private boolean isBoolean(String string, CommandSender sender) {
+    private boolean isBool(String string, CommandSender sender) {
         Pattern p = Pattern.compile("[true|false]");
         Matcher m = p.matcher(string.toLowerCase());
         Boolean result = m.find();
