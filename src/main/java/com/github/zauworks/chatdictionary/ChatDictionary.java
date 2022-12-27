@@ -4,8 +4,11 @@
 
 package com.github.zauworks.chatdictionary;
 
+import com.github.zauworks.chatdictionary.command.DictionarySettingCommand;
 import com.github.zauworks.chatdictionary.dictionary.DictionaryWord;
 import com.github.zauworks.chatdictionary.listener.PlayerChat;
+import com.github.zauworks.chatdictionary.dictionary.DictionaryData;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -30,6 +33,7 @@ public final class ChatDictionary extends JavaPlugin {
         initializeWords();
 
         getServer().getPluginManager().registerEvents(new PlayerChat(), this);
+        getCommand("dictionary").setExecutor(new DictionarySettingCommand());
 
         getLogger().info("ChatDictionary version " + getDescription().getVersion() + " has been loaded!");
     }
@@ -37,6 +41,8 @@ public final class ChatDictionary extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("ChatDictionary version " + getDescription().getVersion() + " has been un-loaded!");
+        new DictionaryData().main("all", Bukkit.getConsoleSender());
+
     }
 
     public static ChatDictionary getInstance() {

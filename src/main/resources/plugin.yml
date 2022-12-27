@@ -5,3 +5,13 @@ api-version: 1.15
 prefix: ChatDictionary
 authors: [ zauuuw ]
 description: チャットに辞書機能を追加します
+commands:
+  dictionary:
+    description: 辞書の輪度を追加、削除、設定するためのコマンドです
+    permission: dictionary.command.setting
+    usage: /dictionary <add|remove|options|config reload> ...
+
+
+permissions:
+  dictionary.command.setting:
+    default: op
