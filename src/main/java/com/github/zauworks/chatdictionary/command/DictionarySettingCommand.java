@@ -2,12 +2,11 @@ package com.github.zauworks.chatdictionary.command;
 
 import com.github.zauworks.chatdictionary.ChatDictionary;
 import com.github.zauworks.chatdictionary.dictionary.DictionaryWord;
-import com.github.zauworks.chatdictionary.util.DataSave;
+import com.github.zauworks.chatdictionary.dictionary.DictionaryData;
 import com.github.zauworks.chatdictionary.util.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -52,10 +51,10 @@ public class DictionarySettingCommand implements CommandExecutor {
             }
         }
 
-        if (type.equalsIgnoreCase("add") && args.length >= 3) {
+        if (type.equalsIgnoreCase("add")) {
             // command type : add
             String word = args[1];
-            if(word.contains("+"))word.replace("+"," ");
+            if (word.contains("+")) word.replace("+", " ");
             DictionaryWord dictWord = new DictionaryWord("none", false, false, getMean(args, 2));
             ChatDictionary.getDictionaryWords().put(word, dictWord);
             sender.sendMessage(new Messages().success("[Add successful]:Complete to add \"" + word + "\"."));
@@ -63,7 +62,7 @@ public class DictionarySettingCommand implements CommandExecutor {
         } else if (type.equalsIgnoreCase("remove")) {
             //command type : remove
             String word = args[1];
-            if(word.contains("+"))word.replace("+"," ");
+            if (word.contains("+")) word.replace("+", " ");
             if (!ChatDictionary.getDictionaryWords().containsKey(word)) {
                 sender.sendMessage(new Messages().error("[Word remove Error]:Not contains word."));
                 return false;
@@ -74,7 +73,7 @@ public class DictionarySettingCommand implements CommandExecutor {
         } else if (type.equalsIgnoreCase("options")) {
             //command type : options
             String word = args[1];
-            if(word.contains("+"))word.replace("+"," ");
+            if (word.contains("+")) word.replace("+", " ");
             if (!ChatDictionary.getDictionaryWords().containsKey(word)) {
                 // the words(map) does not contain entered word
                 sender.sendMessage(new Messages().error("[Word modify Error]:Not contains word."));
@@ -129,7 +128,7 @@ public class DictionarySettingCommand implements CommandExecutor {
                     && ChatDictionary.getDictionaryWords().containsKey(args[2])) {
                 //word reload
                 String word = args[2];
-                wordReload(word);
+                new DictionaryData().wordReload(word);
                 sender.sendMessage(new Messages().success("[Success]:Complete to reload '" + word + "'"));
                 return true;
 
@@ -139,21 +138,21 @@ public class DictionarySettingCommand implements CommandExecutor {
                 sender.sendMessage(new Messages().success("[Success]:Complete to reload a config."));
                 return true;
             }
-        } else if(type.equalsIgnoreCase("config")
-        && args[1].equalsIgnoreCase("save")){
+        } else if (type.equalsIgnoreCase("config")
+                && args[1].equalsIgnoreCase("save")) {
             //command type : config save
-            if(args.length != 3){
+            if (args.length != 3) {
                 sender.sendMessage(new Messages().error("[Error]:Usage: /dictionary config save <all | word>."));
                 return false;
             }
-            if(args[2].equalsIgnoreCase("all")){
-                new DataSave().main("all",sender);
+            if (args[2].equalsIgnoreCase("all")) {
+                new DictionaryData().main("all", sender);
                 return true;
-            }else if(ChatDictionary.getDictionaryWords().containsKey(args[2])){
-                new DataSave().main(args[2],sender);
+            } else if (ChatDictionary.getDictionaryWords().containsKey(args[2])) {
+                new DictionaryData().main(args[2], sender);
                 return true;
             }
-        }else {
+        } else {
             sender.sendMessage(new Messages().error("Command Usage: /dictionary <add|remove|options|config reload> ..."));
         }
 
@@ -194,22 +193,6 @@ public class DictionarySettingCommand implements CommandExecutor {
         return builder.toString();
     }
 
-    private void wordReload(String word) {
-        //word Reload
-        FileConfiguration config = ChatDictionary.getInstance().getConfig();
-        String path = "dictionary." + word + ".";
-        String color = config.getString(path + "color");
-        boolean underline = config.getBoolean(path + "underline");
-        boolean bold = config.getBoolean(path + "bold");
-        String mean;
-        if (config.isList(path + "mean")) {
-            mean = String.join("\n", config.getStringList(path + "mean"));
-        } else {
-            mean = config.getString(path + "mean");
-        }
-        DictionaryWord dict = new DictionaryWord(color, underline, bold, mean);
-        ChatDictionary.getDictionaryWords().put(word, dict);
-    }
 
     private void configReload() {
         // reload config
